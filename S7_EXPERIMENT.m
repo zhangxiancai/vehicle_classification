@@ -1,58 +1,58 @@
 % 实验结果
-% clear all
-% close all
-% % r_bus1=csvread('D:\TD_DATA\2021-3-18_data\radar_old_keche.txt');
+clear all
+close all
+% r_bus1=csvread('D:\TD_DATA\2021-3-18_data\radar_old_keche.txt');
 % r_bus2=csvread('D:\TD_DATA\2021-3-18_data\radar_old_keche_b.txt');
 % r_bus3=csvread('D:\TD_DATA\2021-3-18_data\radar_new_keche.txt');
 % r_bus4=csvread('D:\TD_DATA\2021-3-18_data\radar_new_keche_b.txt');
-% % r_bus=[r_bus2;r_bus3(309:14000,:);r_bus4(1:8600,:)];
+% r_bus=[r_bus2;r_bus3(309:14000,:);r_bus4(1:8600,:)];
 % r_bus=csvread('D:\TD_DATA\2021-3-19_data\radar_old_beimen_b.txt');
-% [r_n,r_s]=size(r_bus);
-% 
-% r_mean=zeros(1,r_n);%均值
-% r_state=zeros(1,r_n);
-% count=r_n;
-% 
-% baseline=106;
-% save_baseline=zeros(1,r_n);
-% for i=1:count
-%     %     norm_data(i,:)=norm_down_signal(r_data(i,2:end));
-%     r_mean(i)=mean(r_bus(i,2:end));
-%     if r_mean(i)>baseline*1.3
-%         r_state(i)=1;
-%         
-%     else
-%         baseline=0.9*baseline+0.1*r_mean(i);
-%     end
-%     save_baseline(i)=baseline;
-% end
+r_bus=csvread('r_mesh.csv');
+% r_bus=csvread('C:\D\TD_DATA\2021-3-18_data\radar_new_keche_b.txt');
+[r_n,r_s]=size(r_bus);
+
+r_mean=zeros(1,r_n);%均值
+r_state=zeros(1,r_n);
+count=r_n;
+
+baseline=106;
+save_baseline=zeros(1,r_n);
+thre=zeros(1,r_n);
+for i=1:count
+    %     norm_data(i,:)=norm_down_signal(r_data(i,2:end));
+    r_mean(i)=mean(r_bus(i,2:end));
+    thre(i)=baseline*1.15;
+    if r_mean(i)>thre(i)
+        r_state(i)=1;
+        
+    else
+        baseline=0.8*baseline+0.2*r_mean(i);
+    end
+    save_baseline(i)=baseline;
+end
+figure
+plot(r_mean(1:count));hold on;plot(thre,'--');
+hold on;plot(500*r_state(1:count)+200,'-.');
+legend('averaged data','threhold','result of step 1');xlabel('Measurement Counts');ylabel('Averaged Amplitude');
+% ylim([0,2]);
+
+% r_f_temp_f=[0,r_state];
+% r_f_temp_b=[r_state,0];
 % figure
-% plot(r_mean(1:count));hold on;plot(save_baseline);
-% 
-% 
-% 
-% figure
-% plot(r_mean(1:count));hold on
-% plot(1200*r_state(1:count));
-% % ylim([0,2]);
-% 
-% % r_f_temp_f=[0,r_state];
-% % r_f_temp_b=[r_state,0];
-% % figure
-% % plot(r_f_temp_b-r_f_temp_f);
-% 
+% plot(r_f_temp_b-r_f_temp_f);
+
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% l=r_state;
-% d_x=my_dilate(l);
-% c_d_x=my_erode(d_x);
-% c_c_d_x=my_erode(c_d_x);
-% d_c_c_d_x=my_dilate(c_c_d_x);
-% 
-% figure
-% plot(r_mean);hold on
-% plot(1200*r_state);hold on
-% plot(1300*d_c_c_d_x+10);
-% 
+l=r_state;
+d_x=my_dilate(l);
+c_d_x=my_erode(d_x);
+c_c_d_x=my_erode(c_d_x);
+d_c_c_d_x=my_dilate(c_c_d_x);
+
+figure
+plot(r_mean);hold on
+plot(500*r_state+200,'-.');hold on
+plot(500*d_c_c_d_x+1000,':');
+legend('averaged data','result of step 1','filtered result');xlabel('Measurement Counts');ylabel('Averaged Amplitude');
 % 
 % d_c_c_d_x_a=[d_c_c_d_x,0];
 % d_c_c_d_x_b=[0,d_c_c_d_x];

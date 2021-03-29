@@ -1,6 +1,6 @@
 %形态学去毛刺
 clear all
-r_data=csvread('D:\TD_DATA\2021-3-19_data\radar_old_beimen_b.txt');
+r_data=csvread('C:\D\TD_DATA\2021-3-18_data\radar_old_keche_b.txt');
 
 [r_n,r_s]=size(r_data);
 mean_r_data=zeros(1,r_n);%均值
