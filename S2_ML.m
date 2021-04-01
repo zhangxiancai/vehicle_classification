@@ -1,4 +1,4 @@
-%展示车辆数据，SVM,R_TREE,
+%SVM, RF
 clear all
 % close all
 S5_EXTEND;
@@ -7,7 +7,7 @@ S5_EXTEND;
 
 %   md1=fitcecoc(ML_X,label','Learners','tree','KFold',5);
   
-  md1=fitcensemble(ML_X,label','Learners','tree','Method','Bag','KFold',5);
+  md1=fitcensemble(ML_X,label','Learners','tree','Method','Bag');
   predict_label=kfoldPredict(md1);
  
   res=zeros(3,3);

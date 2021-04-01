@@ -1,7 +1,7 @@
-function D_X=my_erode(X)
+function D_X=my_erode(X,l)
 %Ò»Î¬¸¯Ê´º¯Êý,5
 %X=1*n
-l=5;
+% l=15;
 h_l=floor(l/2);
 [~,s]=size(X);
 D_X=X;

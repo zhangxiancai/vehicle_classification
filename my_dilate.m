@@ -1,7 +1,7 @@
-function D_X=my_dilate(X)
+function D_X=my_dilate(X,l)
 %“ªŒ¨≈Ú’Õ∫Ø ˝,5
 %X=1*n
-l=5;%25
+% l=15;%25
 h_l=floor(l/2);
 [~,s]=size(X);
 D_X=X;

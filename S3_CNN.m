@@ -1,5 +1,6 @@
 %卷积网络
 clear all
+close all
 addpath('C:\Program Files\MATLAB\R2018b\examples\nnet\main');
 % imds = imageDatastore('cnn_vehicle_data', ...
 %     'IncludeSubfolders',true,'LabelSource','foldernames','FileExtensions','.csv');
@@ -7,8 +8,8 @@ addpath('C:\Program Files\MATLAB\R2018b\examples\nnet\main');
 % numTrainFiles = 20;
 % [imdsTrain,imdsValidation] = splitEachLabel(imds,numTrainFiles,'randomize');
 
-% S5_EXTEND;
-S5_EXTEND_c;
+S5_EXTEND;
+% S5_EXTEND_c;
 
 [trainset_index,valiset_index]=get_trainset_valiset_index(label);%划分训练集和验证集索引
 % CNN_X=zeros(70,6,1,74);
@@ -42,9 +43,9 @@ S5_EXTEND_c;
 
  
 layers = [
-    imageInputLayer([70 827 1])
+    imageInputLayer([24 24 1])
     
-    convolution2dLayer(3,8,'Padding','same','Stride',3)
+    convolution2dLayer(3,8,'Padding','same','Stride',1)
     batchNormalizationLayer
     reluLayer
     
@@ -60,6 +61,7 @@ layers = [
     batchNormalizationLayer
     reluLayer
     
+
     fullyConnectedLayer(3)
     softmaxLayer
     classificationLayer];
@@ -83,6 +85,7 @@ options = trainingOptions('sgdm', ...
 % transfer_net = trainNetwork(googlenet_X(:,:,:,trainset_index),categorical(label(trainset_index)),lgraph,options);
 % YPred = classify(transfer_net,googlenet_X(:,:,:,valiset_index));
 net = trainNetwork(CNN_X(:,:,1,trainset_index_a),categorical(label(trainset_index_a)),layers,options);
+analyzeNetwork(net);
 % YPred = classify(net,CNN_X_b);
 % 
 % accuracy = sum(YPred == categorical(label_b)')/numel(YPred);

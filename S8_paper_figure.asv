@@ -23,7 +23,6 @@ plot(mean(r_mesh(:,2:end)'));xlabel('Measurement Counts');ylabel('Averaged Ampli
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
-%数据原理图
 clear all
 
 input_radar_address='C:\D\Radartool\acconeer-python-exploration\gui\330_1102.h5';
@@ -38,7 +37,6 @@ xlabel('Sample Counts');ylabel('Amplitude');
 set(gca,'XTick',[200,416,600,800]);set(gca,'XTickLabel',{'200','416','600','800'});
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
 clear all
 r_mesh=csvread('r_mesh.csv');
 figure;
@@ -65,7 +63,6 @@ figure;
 plot(r_mesh(293,2:end),'*-');xlabel('Sample Counts');ylabel('Amplitude');title('Vehicle entering');ylim([0,3000]);
 
 %%%%%%%%%%%%%%%%%%%%%%%
-%vehicle detection parameters
 clear all
 r_bus2=csvread('C:\D\TD_DATA\2021-3-18_data\radar_old_keche_b.txt');
 r_bus3=csvread('C:\D\TD_DATA\2021-3-18_data\radar_new_keche.txt');
@@ -128,11 +125,11 @@ net = trainNetwork(CNN_X,categorical(label),layers,options);
 
 ML_X_L=[ML_X;ML_X;ML_X;ML_X;ML_X;ML_X;ML_X;ML_X;ML_X;ML_X;ML_X;ML_X;ML_X;ML_X];
 total_time=zeros(3,12);
-for i=1:12
+for i=1:5
     
        tic;
        for j=1:250*i
-       predict(net,CNN_X(:,:,1,mod(j,440)+1));
+       predict(net,CNN_X(:,:,1,mod(j+1,440)));
        end
        toc;
         total_time(3,i)=toc;
@@ -152,7 +149,7 @@ for i=1:12
     total_time(1,i)=toc;
     i
 end
-% total_time(2,1)=12.332;
+total_time(2,1)=12.332;
 % figure;
 % plot(total_time(1,:)','*-');hold on;plot(total_time(2,:)','+-');legend('VCRF','VCSVM');
 % xlabel('Number of vehicle samples');ylabel('Time/s');xlim([0,13]);

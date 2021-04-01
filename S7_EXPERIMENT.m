@@ -2,12 +2,13 @@
 clear all
 close all
 % r_bus1=csvread('D:\TD_DATA\2021-3-18_data\radar_old_keche.txt');
-% r_bus2=csvread('D:\TD_DATA\2021-3-18_data\radar_old_keche_b.txt');
-% r_bus3=csvread('D:\TD_DATA\2021-3-18_data\radar_new_keche.txt');
-% r_bus4=csvread('D:\TD_DATA\2021-3-18_data\radar_new_keche_b.txt');
-% r_bus=[r_bus2;r_bus3(309:14000,:);r_bus4(1:8600,:)];
+r_bus2=csvread('C:\D\TD_DATA\2021-3-18_data\radar_old_keche_b.txt');
+r_bus3=csvread('C:\D\TD_DATA\2021-3-18_data\radar_new_keche.txt');
+r_bus4=csvread('C:\D\TD_DATA\2021-3-18_data\radar_new_keche_b.txt');
+r_car=csvread('C:\D\TD_DATA\2021-1-15_data\20210115_103952_ÈýÁ¾_Æû³µ.txt');
+r_bus=[r_bus2;r_bus3(309:14000,:);r_bus4(1:8600,:);r_car];
 % r_bus=csvread('D:\TD_DATA\2021-3-19_data\radar_old_beimen_b.txt');
-r_bus=csvread('r_mesh.csv');
+% r_bus=csvread('r_mesh.csv');
 % r_bus=csvread('C:\D\TD_DATA\2021-3-18_data\radar_new_keche_b.txt');
 [r_n,r_s]=size(r_bus);
 
@@ -21,7 +22,7 @@ thre=zeros(1,r_n);
 for i=1:count
     %     norm_data(i,:)=norm_down_signal(r_data(i,2:end));
     r_mean(i)=mean(r_bus(i,2:end));
-    thre(i)=baseline*1.15;
+    thre(i)=baseline*1.2;
     if r_mean(i)>thre(i)
         r_state(i)=1;
         
@@ -43,15 +44,16 @@ legend('averaged data','threhold','result of step 1');xlabel('Measurement Counts
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 l=r_state;
-d_x=my_dilate(l);
-c_d_x=my_erode(d_x);
-c_c_d_x=my_erode(c_d_x);
-d_c_c_d_x=my_dilate(c_c_d_x);
+l_g=17;
+d_x=my_dilate(l,l_g);
+c_d_x=my_erode(d_x,l_g);
+c_c_d_x=my_erode(c_d_x,l_g);
+d_c_c_d_x=my_dilate(c_c_d_x,l_g);
 
 figure
 plot(r_mean);hold on
 plot(500*r_state+200,'-.');hold on
-plot(500*d_c_c_d_x+1000,':');
+plot(500*d_c_c_d_x+1000);
 legend('averaged data','result of step 1','filtered result');xlabel('Measurement Counts');ylabel('Averaged Amplitude');
 % 
 % d_c_c_d_x_a=[d_c_c_d_x,0];
@@ -124,18 +126,15 @@ acc=(res(1,1)+res(2,2)+res(3,3)+res(4,4))/(samples_count1);
 layers = [
     imageInputLayer([24 24 1])
     
-    convolution2dLayer(3,8,'Padding','same','Stride',3)
+    convolution2dLayer(3,8,'Padding','same','Stride',1)
     batchNormalizationLayer
     reluLayer
-    
 %     maxPooling2dLayer(2,'Stride',2)
-    
     convolution2dLayer(3,16,'Padding','same')
     batchNormalizationLayer
     reluLayer
-    
     maxPooling2dLayer(2,'Stride',2)
-    
+ 
     convolution2dLayer(3,32,'Padding','same')
     batchNormalizationLayer
     reluLayer
@@ -153,7 +152,6 @@ options = trainingOptions('sgdm', ...
     'MiniBatchSize',8, ...
     'Verbose',false, ...
     'Plots','training-progress');
-
 net = trainNetwork(CNN_X(:,:,1,trainset_index),categorical(label(trainset_index)),layers,options);
 
 

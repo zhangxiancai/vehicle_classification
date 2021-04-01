@@ -18,7 +18,7 @@ sq_extend_CNN_X{4}=data_extend_b(X,'nearest');
 sq_extend_CNN_X{5}=data_extend_b(X,'bilinear');
 sq_extend_CNN_X{6}=data_extend_b(X,'bicubic');
 
-CNN_X=zeros(24,24,1,74*6);
+CNN_X=zeros(24,24,1,74*6);%
 CNN_X(:,:,1,1:74)=sq_extend_CNN_X{1};
 CNN_X(:,:,1,75:148)=sq_extend_CNN_X{2};
 CNN_X(:,:,1,149:222)=sq_extend_CNN_X{3};
@@ -35,7 +35,7 @@ valiset_index_b=[valiset_index_a 74+valiset_index_a 148+valiset_index_a 222+vali
 % label=csvread('label.csv');
 ML_X=zeros(74*6,576);
 for i=1:74*6
-    ML_X(i,:)=reshape(CNN_X(:,:,1,i),[1,576]);
+    ML_X(i,:)=reshape(CNN_X(:,:,1,i),[1,576]);%
 end
 
 
