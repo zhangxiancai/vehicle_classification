@@ -55,12 +55,12 @@ plot(r_mean);hold on
 plot(500*r_state+200,'-.');hold on
 plot(500*d_c_c_d_x+1000);
 legend('averaged data','result of step 1','filtered result');xlabel('Measurement Counts');ylabel('Averaged Amplitude');
-% 
+%
 % d_c_c_d_x_a=[d_c_c_d_x,0];
 % d_c_c_d_x_b=[0,d_c_c_d_x];
 % DI_S=d_c_c_d_x_a-d_c_c_d_x_b;figure;plot(DI_S);ylim([-2,2]);%差分
-% 
-% 
+%
+%
 % % numb=0;
 % % for i=2:r_n
 % %  if DI_S(i)==1
@@ -107,51 +107,76 @@ for i=1:samples_count
     ML_X(i,:)=reshape(CNN_X(:,:,1,i),[1,576]);
 end
 
-  md1=fitcensemble(ML_X(1:119,:),label(1:119)','Learners','tree','Method','Bag','KFold',5);
-% md1=fitcecoc(ML_X,label','Learners','svm','KFold',5);
+
+RES=data_feature_extract(X);
+% Index=[1:204];%所有样本
+% Index=[1:119];%客车+图书馆样本
+Index=[1:45 120:204];%客车+北门样本
+
+T_X=RES(Index,:);
+T_Y=label(Index)';
+md1=fitcensemble(T_X,T_Y,'Learners','tree','Method','Bag','KFold',5);
+% md1=fitcecoc(RES(Index,:),label(Index)','Learners','svm','KFold',5);
 predict_label=kfoldPredict(md1);
 
 
-
 res=zeros(4,4);
-samples_count1=119;
+[samples_count1,~]=size(T_X);
 for i=1:samples_count1
-    res(label(i)+1,predict_label(i)+1)=res(label(i)+1,predict_label(i)+1)+1;
+    res(T_Y(i)+1,predict_label(i)+1)=res(T_Y(i)+1,predict_label(i)+1)+1;
 end
 
 acc=(res(1,1)+res(2,2)+res(3,3)+res(4,4))/(samples_count1);
 
-
-[trainset_index,valiset_index]=get_trainset_valiset_index(label);%划分训练集和验证集索引
-layers = [
-    imageInputLayer([24 24 1])
+res_acc=zeros(1,4);
+for i=1:4
     
-    convolution2dLayer(3,8,'Padding','same','Stride',1)
-    batchNormalizationLayer
-    reluLayer
-%     maxPooling2dLayer(2,'Stride',2)
-    convolution2dLayer(3,16,'Padding','same')
-    batchNormalizationLayer
-    reluLayer
-    maxPooling2dLayer(2,'Stride',2)
+    err=res(i,1)+res(i,2)+res(i,3)+res(i,4)+res(1,i)+res(2,i)+res(3,i)+res(4,i)-2*res(i,i);
  
-    convolution2dLayer(3,32,'Padding','same')
-    batchNormalizationLayer
-    reluLayer
-    
-    fullyConnectedLayer(3)
-    softmaxLayer
-    classificationLayer];
+    res_acc(1,i)=1-err/samples_count1;
+end
 
-options = trainingOptions('sgdm', ...
-    'InitialLearnRate',0.01, ...
-    'MaxEpochs',8, ...
-    'Shuffle','every-epoch', ...
-     'ValidationData',{CNN_X(:,:,1,valiset_index),categorical(label(valiset_index))'},...
-    'ValidationFrequency',1, ...
-    'MiniBatchSize',8, ...
-    'Verbose',false, ...
-    'Plots','training-progress');
-net = trainNetwork(CNN_X(:,:,1,trainset_index),categorical(label(trainset_index)),layers,options);
+
+% [0.9363,0.8529,0.8922,0.9951];0.8382 %所有样本37-68-54-45
+% [0.9496,0.9496,0.9916,0.9916]Index=[1:119];0.9412客车+图书馆样本
+% [0.9615,0.8385,0.8077,0.9769]Index=[1:45 120:204];0.7923客车+北门样本
+
+
+% 0.8294 0.9546 0.7892 极大点特征+底盘高度+车长
+% 0.8358 0.9496 0.7877 极大点特征+底盘高度
+% 0.8206 0.9378 0.7777 极大点特征
+
+%%%%%%%%%%%%%%
+% [trainset_index,valiset_index]=get_trainset_valiset_index(label);%划分训练集和验证集索引
+% layers = [
+%     imageInputLayer([24 24 1])
+%     
+%     convolution2dLayer(3,8,'Padding','same','Stride',1)
+%     batchNormalizationLayer
+%     reluLayer
+%     %     maxPooling2dLayer(2,'Stride',2)
+%     convolution2dLayer(3,16,'Padding','same')
+%     batchNormalizationLayer
+%     reluLayer
+%     maxPooling2dLayer(2,'Stride',2)
+%     
+%     convolution2dLayer(3,32,'Padding','same')
+%     batchNormalizationLayer
+%     reluLayer
+%     
+%     fullyConnectedLayer(3)
+%     softmaxLayer
+%     classificationLayer];
+% 
+% options = trainingOptions('sgdm', ...
+%     'InitialLearnRate',0.01, ...
+%     'MaxEpochs',8, ...
+%     'Shuffle','every-epoch', ...
+%     'ValidationData',{CNN_X(:,:,1,valiset_index),categorical(label(valiset_index))'},...
+%     'ValidationFrequency',1, ...
+%     'MiniBatchSize',8, ...
+%     'Verbose',false, ...
+%     'Plots','training-progress');
+% net = trainNetwork(CNN_X(:,:,1,trainset_index),categorical(label(trainset_index)),layers,options);
 
 

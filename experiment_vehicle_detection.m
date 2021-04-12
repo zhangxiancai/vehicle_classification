@@ -1,7 +1,7 @@
 function d_c_c_d_x=experiment_vehicle_detection(r_bus,l_g,m_thre)
 %车辆检测
 %l_g=结构体长度， m_thre=阈值权值
-
+%输出: s(t)
 
 [r_n,r_s]=size(r_bus);
 
