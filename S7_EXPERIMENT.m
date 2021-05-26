@@ -1,7 +1,7 @@
-% 实验结果
+% 实验结果 无卡车
 clear all
 close all
-% r_bus1=csvread('D:\TD_DATA\2021-3-18_data\radar_old_keche.txt');
+r_bus1=csvread('C:\D\TD_DATA\2021-3-18_data\radar_old_keche.txt');
 r_bus2=csvread('C:\D\TD_DATA\2021-3-18_data\radar_old_keche_b.txt');
 r_bus3=csvread('C:\D\TD_DATA\2021-3-18_data\radar_new_keche.txt');
 r_bus4=csvread('C:\D\TD_DATA\2021-3-18_data\radar_new_keche_b.txt');

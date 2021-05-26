@@ -31,6 +31,14 @@ d_x=my_dilate(l,l_g);
 c_d_x=my_erode(d_x,l_g);
 c_c_d_x=my_erode(c_d_x,l_g);
 d_c_c_d_x=my_dilate(c_c_d_x,l_g);
+d_c_c_d_x1=medianfilt(l,l_g);
 
+
+figure
+plot(r_mean);hold on
+plot(500*r_state+200,'-.');hold on
+plot(500*d_c_c_d_x+1000,':');hold on;
+plot(500*d_c_c_d_x1+1500,':');
+legend('averaged data','s(t)','filtered result','median');xlabel('Measurement Counts');ylabel('Averaged Amplitude');
 
 end

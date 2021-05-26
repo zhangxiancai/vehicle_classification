@@ -1,10 +1,10 @@
-
 function [comp_temp_1,comp_temp_2]=get_maxfeature_signal_new(signal)
-%得到极大值点 输入=一维行向量 输出=100*2 5*2
+%得到极大值点 输入=一维行向量 输出=100*2 5*2, 不归一化 不下采样, 中值均值滤波
 
 
 % temp=downsample_norm(signal);%下采样 归一化
-temp=signal;
+temp=medfilt(medianfilt(signal,26),13);%中值均值滤波
+% temp=signal;
 [~,temp_s]=size(temp);
 comp_temp_1=zeros(100,2);
 z=1;
@@ -21,7 +21,7 @@ for j=11:temp_s-10
     end
 end
 
-comp_temp_2=zeros(5,2);
+comp_temp_2=zeros(10,2);
 
 reg_index=1;
 reg=1;
@@ -29,7 +29,7 @@ for k=2:100
     if comp_temp_1(k,1)==0
         break
     end
-    if reg_index>5
+    if reg_index>10
         break
     end
     
@@ -47,6 +47,7 @@ for k=2:100
     end
     
 end
-
+%debug
+% figure;plot(temp);hold on;plot(comp_temp_1(:,1),comp_temp_1(:,2),'*');hold on; plot(comp_temp_2(:,1),comp_temp_2(:,2),'+');
 
 end

@@ -1,27 +1,28 @@
 function RES=data_feature_extract(X)
-%数据集特征提取,先插值后提取极大值,车长，底盘高度
+%数据集特征提取,先插值后提取极大值，底盘高度
 %输入：原始数据cell(1,~),method=插值方法（字符串）
 %输出：(max_height*6+2,samples_count)
 
-
-
-max_height=96;
+max_height=16;
 [~,samples_count]=size(X);
-resize_X=zeros(max_height,827);
-RES=zeros(samples_count,max_height*6+2);
-MP_X=zeros(1,max_height*6);
+wcre_num=2*3;
+RES=zeros(samples_count,max_height*wcre_num+1);
+MP_X=zeros(1,max_height*wcre_num);
 for i=1:samples_count%
     [vehicle_length,~]=size(X{i});
     
-    vehicle_height=get_vehicle_height(X{i});
-    resize_X=imresize(X{i},[max_height,827],'bicubic');%先插值
+
+    resize_X=imresize(X{i},[max_height,827],'bilinear');%先插值
+    vehicle_height=get_vehicle_height(resize_X);%
     if i==50
         
     end
     for j=1:max_height
-    MP_X(6*j-5:6*j)=correction_method1(get_maxfeature_signal(resize_X(j,:)));
+    [~,comp_temp_2]=get_maxfeature_signal_new(resize_X(j,:));
+%     MP_X(8*j-7:8*j)=correction_method(comp_temp_2);%排序
+    MP_X(wcre_num*j-wcre_num+1:wcre_num*j)=correction_method(comp_temp_2);%排序
     end
-    RES(i,:)=[MP_X,vehicle_height,vehicle_length];
+    RES(i,:)=[MP_X,vehicle_height];
    
 end
 
