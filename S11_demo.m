@@ -1,7 +1,7 @@
 % demo
 clear all
 % train_rfmodel();%训练随机森林模型并保存
-original_data=csvread('C:\D\TD_DATA\2021-3-19_data\radar_old_beimen_b.txt');%载入待检测原始数据
+original_data=csvread('D:\TD_DATA\2021-1-15_data\20210115_103952_三辆_汽车.txt');%载入待检测原始数据
 se_pairs=vehicle_detection(original_data,17,1.2);%车辆检测
 [~,numb]=size(se_pairs);%车辆个数
 types=zeros(1,numb);
@@ -215,7 +215,7 @@ plot(radar_mean);title('平均数据');xlabel('Measurement Counts');ylabel('Averaged
 figure
 subplot(2,1,1);
 plot(radar_mean);title('车辆检测结果');xlabel('Measurement Counts');ylabel('Averaged Amplitude');
-hold on; plot(se_pairs(1,:),radar_mean(se_pairs(1,:)),'s', 'MarkerSize',10,'MarkerEdgeColor','g','MarkerFaceColor','g');
+hold on;plot(se_pairs(1,:),radar_mean(se_pairs(1,:)),'s', 'MarkerSize',10,'MarkerEdgeColor','g','MarkerFaceColor','g');
 hold on; plot(se_pairs(2,:),radar_mean(se_pairs(2,:)),'p', 'MarkerSize',10,'MarkerEdgeColor','b','MarkerFaceColor','b');
 subplot(2,1,2);
 plot(radar_mean);title('车辆分类结果');xlabel('Measurement Counts');ylabel('Averaged Amplitude');
