@@ -4,7 +4,7 @@
 
 ## 2021-05-26 DATA 
 
-- 雷达地磁车型数据：./mag12_radar_vehicle_data
+- ./mag12_radar_vehicle_data
 
 ## 2020-07-09 DATA 
-- 雷达停车检测数据： ./data_2020_07_09.log
+- ./data_2020_07_09.log
