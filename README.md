@@ -4,7 +4,7 @@
 
 ## 2021-05-26 DATA 
 
-- ./mag12_radar_vehicle_data
+- 地磁雷达车型数据 ./mag12_radar_vehicle_data
 
 ## 2020-07-09 DATA 
-- ./data_2020_07_09.log
+- 雷达停车数据 ./data_2020_07_09.log
